@@ -1,5 +1,8 @@
 import React from 'react';
 import '../styles/index.css';
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 export const viewport = {
   width: 'device-width',
@@ -25,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-      {children}
-        <script id="dhws-errorTracker" src="/dhws-error-tracker.js"></script>
-  <script id="dhws-elementInspector" src="/dhws-web-inspector.js"></script>
-</body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
