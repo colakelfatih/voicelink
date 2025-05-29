@@ -1,7 +1,8 @@
 import React from 'react';
 import '../styles/index.css';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 
 export const viewport = {
@@ -10,8 +11,8 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: 'Next.js with Tailwind CSS',
-  description: 'A boilerplate project with Next.js and Tailwind CSS',
+  title: 'GameTalk',
+  description: 'Connect with gamers worldwide',
   icons: {
     icon: [
       { url: '/favicon.ico', type: 'image/x-icon' }
@@ -28,9 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Analytics />
-        <SpeedInsights />
+        <LanguageProvider>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </LanguageProvider>
       </body>
     </html>
   );
