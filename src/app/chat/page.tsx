@@ -54,7 +54,7 @@ export default function ChatPage() {
             token={token}
             serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
             connect={true}
-            video={false}
+            video={true}
             audio={true}
             className="h-[calc(100vh-8rem)]"
             data-lk-theme="default"
