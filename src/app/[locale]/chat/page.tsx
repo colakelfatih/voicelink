@@ -6,6 +6,7 @@ import { LiveKitRoom, VideoConference, ControlBar } from '@livekit/components-re
 import '@livekit/components-styles';
 import { Room } from 'livekit-client';
 import { useRoom } from '@/hooks/useRoom';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function ChatContent() {
   const searchParams = useSearchParams();
@@ -14,7 +15,7 @@ function ChatContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { loading } = useRoom();
-
+  const { locale } = useLanguage();
   const roomName = searchParams?.get('room') || '';
   const username = localStorage.getItem('username') || '';
 
@@ -50,7 +51,7 @@ function ChatContent() {
   }, [roomName, username, router]);
 
   const handleLeave = () => {
-    router.push('/lobby');
+    router.push(`/${locale}/lobby`);
   };
 
   if (isLoading) {
