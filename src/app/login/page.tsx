@@ -86,13 +86,13 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Register Link */}
+        {/* Register Link
         <p className="mt-6 sm:mt-8 text-center text-[#9BABBA] text-sm sm:text-base">
           Don't have an account?{' '}
           <Link href="/register" className="text-[#0C78F2] hover:text-[#0C78F2]/80">
             Create one
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );
