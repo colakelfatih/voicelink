@@ -6,12 +6,12 @@ export default getRequestConfig(async ({ locale }) => {
   if (!locale || !locales.includes(locale as any)) {
     return {
       locale: defaultLocale,
-      messages: (await import(`../messages/${defaultLocale}/common.json`)).default
+      messages: (await import(`./locales/${defaultLocale}.json`)).default
     };
   }
   
   return {
     locale,
-    messages: (await import(`../messages/${locale}/common.json`)).default
+    messages: (await import(`./locales/${locale}.json`)).default
   };
 }); 

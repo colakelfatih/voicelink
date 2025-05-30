@@ -3,8 +3,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import Header from '@/components/common/Header';
-import Sidebar from '@/components/Sidebar';
 import '@/styles/index.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -13,13 +11,12 @@ export function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'tr' }];
 }
 
-export default async function RootLayout({
-  children,
-  params: { locale }
-}: {
+type Props = {
   children: React.ReactNode;
   params: { locale: string };
-}) {
+};
+
+export default async function RootLayout({ children, params: { locale } }: Props) {
   let messages;
   try {
     messages = (await import(`@/i18n/locales/${locale}.json`)).default;
