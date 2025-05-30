@@ -1,8 +1,33 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function HomePage() {
+  const router = useRouter();
+  useEffect(() => {
+    // Check if user is already authenticated
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated === 'true') {
+      router.push(`/tr/lobby`);
+    }
+  }, [router]);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signIn('google', { 
+        callbackUrl: `/tr/lobby`,
+        redirect: true 
+      });
+      
+      if (result?.ok) {
+        localStorage.setItem('isAuthenticated', 'true');
+      }
+    } catch (error) {
+      console.error('Sign in error:', error);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-md text-center">
@@ -23,7 +48,7 @@ export default function HomePage() {
         {/* Action Buttons */}
         <div className="space-y-3 sm:space-y-4">
         <button
-            onClick={() => signIn('google', { callbackUrl: '/' })}
+            onClick={handleGoogleSignIn}
             className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
