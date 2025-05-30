@@ -25,8 +25,8 @@ const LobbyPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState('');
-  const [selectedGameType, setSelectedGameType] = useState('battlefield1');
-  const [maxPlayers, setMaxPlayers] = useState(2);
+  const [selectedGameType, setSelectedGameType] = useState('cssource');
+  const [maxPlayers, setMaxPlayers] = useState(100);
 
   const updateRoomList = useCallback(() => {
     const storedRooms = localStorage.getItem('gameRooms');
