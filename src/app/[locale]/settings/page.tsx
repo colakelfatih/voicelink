@@ -38,17 +38,7 @@ const SettingsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Language Settings */}
-            <div className="bg-white dark:bg-[#293036] rounded-lg p-6 shadow-sm dark:shadow-none">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('language')}</h2>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600 dark:text-[#9BABBA]">{t('selectLanguage')}</span>
-                <select className="bg-white dark:bg-[#1E2328] text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0C78F2]">
-                  <option value="en">English</option>
-                  <option value="tr">Türkçe</option>
-                </select>
-              </div>
-            </div>
+    
 
             {/* Notification Settings */}
             <div className="bg-white dark:bg-[#293036] rounded-lg p-6 shadow-sm dark:shadow-none">

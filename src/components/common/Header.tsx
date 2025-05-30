@@ -21,6 +21,10 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const t = useTranslations('common');
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLocale(e.target.value as 'en' | 'tr');
+  };
+
   return (
     <header className="bg-white dark:bg-[#293036] border-b border-gray-200 dark:border-[#1E2328]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +80,7 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
             {/* Language Selector */}
             <select
               value={locale}
-              onChange={(e) => setLocale(e.target.value)}
+              onChange={handleLanguageChange}
               className="bg-white dark:bg-[#1E2328] text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 px-3 py-2 rounded-lg outline-none"
             >
               <option value="en">English</option>

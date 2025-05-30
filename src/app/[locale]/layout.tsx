@@ -1,48 +1,47 @@
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { locales, defaultLocale } from '@/i18n/config';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
-import * as React from 'react';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import Header from '@/components/common/Header';
+import Sidebar from '@/components/Sidebar';
+import '@/styles/index.css';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return [{ locale: 'en' }, { locale: 'tr' }];
 }
 
-interface LocaleLayoutProps {
+export default async function RootLayout({
+  children,
+  params: { locale }
+}: {
   children: React.ReactNode;
   params: { locale: string };
-}
-
-export default function LocaleLayout({
-  children,
-  params,
-}: LocaleLayoutProps) {
-  // Validate that the incoming `locale` parameter is valid
-  if (!params.locale || !locales.includes(params.locale as any)) {
-    notFound();
-  }
-
+}) {
   let messages;
   try {
-    messages = require(`@/messages/${params.locale}/common.json`);
+    messages = (await import(`@/i18n/locales/${locale}.json`)).default;
   } catch (error) {
     notFound();
   }
 
   return (
-    <html lang={params.locale} suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        <NextIntlClientProvider locale={params.locale} messages={messages}>
-          <LanguageProvider>
-            <ThemeProvider>
-              {children}
-              <Analytics />
-              <SpeedInsights />
-            </ThemeProvider>
-          </LanguageProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={inter.className}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeProvider>
+            <LanguageProvider>
+              <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+                <div className="flex flex-1">
+                  <main className="flex-1 overflow-auto">
+                    {children}
+                  </main>
+                </div>
+              </div>
+            </LanguageProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

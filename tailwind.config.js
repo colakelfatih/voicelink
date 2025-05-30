@@ -5,22 +5,19 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: {
-          light: '#4da6ff',
-          DEFAULT: '#0078ff',
-          dark: '#0057b8',
-          background: 'var(--primary-background)',
-          foreground: 'var(--primary-foreground)',
+        primary: '#0C78F2',
+        secondary: '#1E2328',
+        background: {
+          light: '#FFFFFF',
+          dark: '#121415',
         },
-        secondary: {
-          light: '#f8f9fa',
-          DEFAULT: '#e9ecef',
-          dark: '#dee2e6',
-          background: 'var(--secondary-background)',
-          foreground: 'var(--secondary-foreground)',
+        text: {
+          light: '#1F2937',
+          dark: '#F3F4F6',
         },
         accent: {
           DEFAULT: 'var(--accent-color)',
