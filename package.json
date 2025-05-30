@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@auth/core": "^0.34.2",
     "@dhiwise/component-tagger": "^1.0.3",
     "@livekit/components-react": "^2.9.9",
     "@livekit/components-styles": "^1.1.6",
@@ -23,6 +24,7 @@
     "livekit-client": "^2.13.3",
     "livekit-server-sdk": "^2.13.0",
     "next": "15.2.4",
+    "next-auth": "^4.24.11",
     "next-intl": "^4.1.0",
     "prisma": "^6.8.2",
     "react": "^19.0.0",

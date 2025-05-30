@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import '@/styles/index.css';
 import { locales } from '@/i18n/config';
+import { Providers } from '@/app/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -40,17 +41,19 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider>
-            <LanguageProvider>
-              <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-                <div className="flex flex-1">
-                  <main className="flex-1 overflow-auto">{children}</main>
+        <Providers>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ThemeProvider>
+              <LanguageProvider>
+                <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+                  <div className="flex flex-1">
+                    <main className="flex-1 overflow-auto">{children}</main>
+                  </div>
                 </div>
-              </div>
-            </LanguageProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+              </LanguageProvider>
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );
