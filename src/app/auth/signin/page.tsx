@@ -1,35 +1,39 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SignIn() {
   const router = useRouter();
-  const params = useParams();
+  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get('callbackUrl') || '/tr/lobby';
 
   useEffect(() => {
-    // Check if user is already authenticated
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated === 'true') {
-      router.push('/tr/lobby');
+    if (status === 'authenticated' && session) {
+      router.push(callbackUrl);
     }
-  }, [router]);
+  }, [status, session, router, callbackUrl]);
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signIn('google', { 
-        callbackUrl: '/tr/lobby',
+      await signIn('google', { 
+        callbackUrl,
         redirect: true 
       });
-      
-      if (result?.ok) {
-        localStorage.setItem('isAuthenticated', 'true');
-      }
     } catch (error) {
       console.error('Sign in error:', error);
     }
   };
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">

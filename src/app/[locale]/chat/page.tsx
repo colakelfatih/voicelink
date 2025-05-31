@@ -7,28 +7,31 @@ import '@livekit/components-styles';
 import { Room } from 'livekit-client';
 import { useRoom } from '@/hooks/useRoom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useSession } from 'next-auth/react';
 
 function ChatContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { loading } = useRoom();
   const { locale } = useLanguage();
   const roomName = searchParams?.get('room') || '';
-  const username = localStorage.getItem('username') || '';
 
   useEffect(() => {
-    if (!username) {
-      router.push('/lobby');
+    if (status === 'loading') return;
+
+    if (status === 'unauthenticated') {
+      router.push(`/${locale}/`);
       return;
     }
 
     const fetchToken = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/token?room=${roomName}&username=${username}`);
+        const response = await fetch(`/api/token?room=${roomName}&username=${session?.user?.name}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -45,16 +48,16 @@ function ChatContent() {
       }
     };
 
-    if (roomName && username) {
+    if (roomName && session?.user?.name) {
       fetchToken();
     }
-  }, [roomName, username, router]);
+  }, [roomName, session, status, locale, router]);
 
   const handleLeave = () => {
     router.push(`/${locale}/lobby`);
   };
 
-  if (isLoading) {
+  if (status === 'loading' || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -72,7 +75,7 @@ function ChatContent() {
           <h2 className="text-2xl font-bold text-red-600 mb-4">Connection Error</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
-            onClick={() => router.push('/lobby')}
+            onClick={() => router.push(`/${locale}/lobby`)}
             className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
           >
             Return to Lobby

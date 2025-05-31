@@ -156,6 +156,9 @@
       "wonGame": "Bir oyun kazandı",
       "joinedRoom": "Yeni bir odaya katıldı",
       "writeBio": "Biyografinizi yazın...",
-      "editProfile": "Profili Düzenle"
+      "editProfile": "Profili Düzenle",
+      "connectionError": "Bağlantı Hatası",
+      "returnToLobby": "Lobiye Dön",
+      "createdAt": "Oluşturulma Tarihi"
     }
   } 

@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Header from '@/components/common/Header';
 import Sidebar from '@/components/Sidebar';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -21,6 +22,7 @@ const LobbyPage: React.FC = () => {
   const t = useTranslations('common');
   const router = useRouter();
   const { locale } = useLanguage();
+  const { data: session, status } = useSession();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
@@ -37,13 +39,15 @@ const LobbyPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const username = localStorage.getItem('username');
-    if (!username) {
+    if (status === 'loading') return;
+    
+    if (status === 'unauthenticated') {
       router.push(`/${locale}/`);
       return;
     }
+
     updateRoomList();
-  }, [locale, router, updateRoomList]);
+  }, [status, locale, router, updateRoomList]);
 
   const handleCreateRoom = () => {
     if (!newRoomName.trim()) {
@@ -99,7 +103,7 @@ const LobbyPage: React.FC = () => {
     }
   };
 
-  if (isLoading) {
+  if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -200,62 +204,46 @@ const LobbyPage: React.FC = () => {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rooms.length === 0 ? (
-                <div className="col-span-full text-center py-12">
-                  <p className="text-lg mb-4">{t('noRoomsAvailable')}</p>
-                  <button
-                    onClick={() => setShowCreateRoom(true)}
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                  >
-                    {t('createFirstRoom')}
-                  </button>
-                </div>
-              ) : (
-                rooms.map((room) => (
-                  <div
-                    key={room.id}
-                    className="bg-white dark:bg-[#293036] rounded-lg shadow-sm dark:shadow-none p-6 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex flex-col h-full">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{room.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-[#9BABBA] mt-1">
-                          {t('gameType')}: {t(room.gameType)}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-[#9BABBA] mt-1">
-                          {room.players}/{room.maxPlayers} {t('players')}
-                        </p>
-                      </div>
-                      <div className="flex items-center justify-between mt-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            room.status === 'waiting'
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                              : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                          }`}
-                        >
-                          {t(room.status)}
-                        </span>
-                        <div className="space-x-2">
-                          <button
-                            onClick={() => handleDeleteRoom(room.id)}
-                            className="px-3 py-1 text-sm bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                          >
-                            {t('delete')}
-                          </button>
-                          <button
-                            onClick={() => handleJoinRoom(room.id)}
-                            className="px-3 py-1 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                            disabled={room.players >= room.maxPlayers}
-                          >
-                            {t('join')}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              {rooms.map((room) => (
+                <div
+                  key={room.id}
+                  className="bg-white dark:bg-[#293036] rounded-lg shadow-sm dark:shadow-none p-6"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{room.name}</h3>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      room.status === 'waiting' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {room.status === 'waiting' ? t('waiting') : t('playing')}
+                    </span>
                   </div>
-                ))
-              )}
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {t('gameType')}: {t(room.gameType)}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {t('players')}: {room.players}/{room.maxPlayers}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {t('createdAt')}: {new Date(room.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-2">
+                    <button
+                      onClick={() => handleDeleteRoom(room.id)}
+                      className="px-3 py-1 text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                    >
+                      {t('delete')}
+                    </button>
+                    <button
+                      onClick={() => handleJoinRoom(room.id)}
+                      className="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-primary/90"
+                    >
+                      {t('join')}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

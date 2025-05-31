@@ -156,6 +156,9 @@
     "wonGame": "Won a game",
     "joinedRoom": "Joined a new room",
     "writeBio": "Write your bio...",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "connectionError": "Connection Error",
+    "returnToLobby": "Return to Lobby",
+    "createdAt": "Created At"
   }
 } 

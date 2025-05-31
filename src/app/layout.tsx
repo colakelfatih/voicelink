@@ -3,7 +3,7 @@ import '../styles/index.css';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { LanguageProvider } from '@/contexts/LanguageContext';
-
+import { Providers } from './providers';
 
 export const viewport = {
   width: 'device-width',
@@ -20,7 +20,6 @@ export const metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,11 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LanguageProvider>
-          {children}
-          <Analytics />
-          <SpeedInsights />
-        </LanguageProvider>
+        <Providers>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
